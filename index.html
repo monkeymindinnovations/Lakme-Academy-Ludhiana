@@ -1211,5 +1211,48 @@
     </div>
 
     <script src="app.js"></script>
-</body>
+</body
+    <script>
+  // Aapka real Google Web App URL yahan successfully lag gaya hai
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbxn-cay70S-PiFNGnMtG0vwpw44JxXy0RFnlW-8G147JlnyBTIhqkjf-mJvWEAZPl8UEQ/exec';
+  
+  // Yeh code aapke existing form ko uski ID ke zariye handle karega
+  const form = document.getElementById('leadForm');
+  const submitBtn = document.getElementById('submitBtn');
+
+  if (form) {
+    form.addEventListener('submit', e => {
+      e.preventDefault(); // Page ko reload hone se rokega taaki data secure jaye
+      
+      // Button ko disable kar rahe hain taaki user double-click na kare
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Sending Lead...';
+      }
+
+      // Yeh line aapke form ka saara data directly Google Sheet me bhej degi
+      fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+        .then(response => {
+           alert('Success! Aapki lead Lakme Academy ki Google Sheet me save ho gayi hai.');
+           
+           if (submitBtn) {
+             submitBtn.disabled = false;
+             submitBtn.innerText = 'Submit';
+           }
+           form.reset(); // Data submit hone ke baad form khali ho jayega
+        })
+        .catch(error => {
+           alert('Oops! Kuch gadbad hui hai, please dubara try karein.');
+           
+           if (submitBtn) {
+             submitBtn.disabled = false;
+             submitBtn.innerText = 'Submit';
+           }
+           console.error('Error!', error.message);
+        });
+    });
+  } else {
+    console.error("Error: HTML mein <form id='leadForm'> nahi mila. Kripya form tag check karein.");
+  }
+</script>
 </html>
